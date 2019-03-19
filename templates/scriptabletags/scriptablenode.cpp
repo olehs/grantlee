@@ -58,7 +58,10 @@ void ScriptableNode::render(OutputStream *stream, Context *c) const
   auto value = const_cast<QJSValue &>(m_renderMethod)
                    .callWithInstance(m_concreteNode, args);
 
-  if (!value.isError() && !value.isUndefined())
+  if (value.isError())
+    throw Grantlee::Exception(TagSyntaxError, value.toString());
+
+  if (!value.isUndefined())
     (*stream) << value.toString();
 }
 
